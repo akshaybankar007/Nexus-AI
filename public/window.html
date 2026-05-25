@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Chat</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/window.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+  <div class="chat-layout">
+    <header class="chat-header">
+      <h2 style="margin:0; font-size:1.2rem; background: linear-gradient(90deg,#3b82f6, #8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Nexus</h2>
+      <a href="index.html" style="color: #94a3b8; text-decoration:none; font-size:0.9rem;">New Chat</a>
+    </header>
+
+    <div id="chatContainer" class="chat-history">
+    </div>
+
+    <div class="chat-footer">
+      <div class="input-wrapper" style="margin:0;">
+        <input id="chatInput" class="main-input" type="text" placeholder="Message Nexus..." autocomplete="off" />
+        <button id="sendBtn" class="send-icon-btn">
+          <img src="assets/send_icon.png" alt="Send">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/window.js"></script>
+</body>
+</html>
