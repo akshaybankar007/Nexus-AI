@@ -1,34 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nexus AI</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus AI</title>
+    
+    <!-- External Dependencies for Gemini-like UI -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  
-  <main class="landing-container">
-    <h1 class="brand-title">Hello, I'm Nexus</h1>
-    <p class="sub-text">How can I help you explore GNIET today?</p>
+    <!-- SPA Root Container -->
+    <div id="app-root" class="gemini-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <button id="newChatBtn" class="new-chat-btn">
+                <span class="material-symbols-outlined">add</span>
+                <span class="btn-text">New chat</span>
+            </button>
+            <div class="recent-chats">
+                <p class="section-title">Recent</p>
+                <div id="historyContainer" class="history-list">
+                    <!-- History items injected via JS -->
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <button class="icon-btn"><span class="material-symbols-outlined">help</span></button>
+                <button class="icon-btn"><span class="material-symbols-outlined">history</span></button>
+                <button class="icon-btn"><span class="material-symbols-outlined">settings</span></button>
+            </div>
+        </aside>
 
-    <div class="input-wrapper">
-      <input id="landingInput" class="main-input" type="text" placeholder="Ask anything..." />
-      <button id="landingBtn" class="send-icon-btn">
-        <img src="assets/send_icon.png" alt="Send">
-      </button>
+        <!-- Main Content Area -->
+        <main class="main-view">
+            <header class="top-nav">
+                <span class="brand-logo">Nexus</span>
+                <div class="user-avatar">A</div>
+            </header>
+
+            <!-- Dynamic View Container (Landing OR Chat) -->
+            <div id="chatContainer" class="chat-container">
+                
+                <!-- Default Landing State -->
+                <div id="landingView" class="greeting-screen">
+                    <h1 class="greeting-text">
+                        <span class="gradient-text">Hello, Akshay.</span><br>
+                        <span class="sub-greeting">How can I help you explore GNIET today?</span>
+                    </h1>
+                    
+                    <div class="suggestions-grid">
+                        <div class="suggestion-card" data-query="Tell me about the CSE Department">
+                            <p>Tell me about the CSE Department</p>
+                            <span class="material-symbols-outlined icon">school</span>
+                        </div>
+                        <div class="suggestion-card" data-query="What is the breakfast menu?">
+                            <p>What is the breakfast menu?</p>
+                            <span class="material-symbols-outlined icon">restaurant</span>
+                        </div>
+                        <div class="suggestion-card" data-query="Placement opportunities at GNIET">
+                            <p>Placement opportunities at GNIET</p>
+                            <span class="material-symbols-outlined icon">work</span>
+                        </div>
+                        <div class="suggestion-card" data-query="Who is the HOD of CSE?">
+                            <p>Who is the HOD of CSE?</p>
+                            <span class="material-symbols-outlined icon">person</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Message Stream (Hidden by default until query is sent) -->
+                <div id="messageStream" class="message-stream" style="display: none;">
+                    <!-- Messages injected via JS -->
+                </div>
+            </div>
+
+            <!-- Fixed Input Area -->
+            <div class="input-section">
+                <div class="input-wrapper">
+                    <input id="mainInput" class="chat-input" type="text" placeholder="Enter a prompt here" autocomplete="off" />
+                    <div class="input-actions">
+                        <button class="icon-btn"><span class="material-symbols-outlined">mic</span></button>
+                        <button id="sendBtn" class="send-btn">
+                            <span class="material-symbols-outlined">send</span>
+                        </button>
+                    </div>
+                </div>
+                <p class="disclaimer">Nexus can make mistakes. Verify important information.</p>
+            </div>
+        </main>
     </div>
 
-    <div class="suggestions-grid">
-      <div class="suggestion-card">Tell me about the CSE Department</div>
-      <div class="suggestion-card">What is the breakfast menu?</div>
-      <div class="suggestion-card">Who is Akshay Bankar?</div>
-      <div class="suggestion-card">Placement opportunities at GNIET</div>
-    </div>
-  </main>
-
-  <script src="js/script.js">
-    
-  </script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
