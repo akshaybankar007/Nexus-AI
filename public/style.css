@@ -1,7 +1,8 @@
 /* ==========================================================================
-   CSS Reset & Variables
+   1. ROOT VARIABLES & THEME (Dark Mode Default)
    ========================================================================== */
 :root {
+    /* Colors */
     --bg-main: #131314;
     --bg-sidebar: #1e1f20;
     --bg-surface: #1e1f20;
@@ -11,13 +12,24 @@
     --text-secondary: #c4c7c5;
     --text-placeholder: #a8abae;
     --border-color: #333537;
-    --accent-blue: #8ab4f8;
-    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     
-    /* Gemini-style animated gradient */
+    /* Typography */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-code: 'Fira Code', 'Courier New', Courier, monospace;
+    
+    /* Effects */
     --gemini-gradient: linear-gradient(74deg, #4285f4 0, #9b72cb 9%, #d96570 20%, #d96570 24%, #9b72cb 35%, #4285f4 44%, #9b72cb 50%, #d96570 56%, #131314 75%, #131314 100%);
+    --transition-speed: 0.3s;
+    
+    /* Z-Index Hierarchy */
+    --z-base: 1;
+    --z-overlay: 100;
+    --z-sidebar: 101;
 }
 
+/* ==========================================================================
+   2. RESET & GLOBAL STYLES
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -29,21 +41,57 @@ body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     height: 100vh;
-    overflow: hidden;
+    width: 100vw;
+    overflow: hidden; /* Prevents whole-page bouncing, scrolling is handled inside containers */
     -webkit-font-smoothing: antialiased;
 }
 
 /* ==========================================================================
-   Main Layout (SPA Root)
+   Global Icon Enforcement
    ========================================================================== */
-.gemini-layout {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle; /* Ensures icons align properly next to text like "New chat" */
+}
+
+/* Custom Scrollbar for Webkit */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bg-surface-hover);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 /* ==========================================================================
-   Sidebar Navigation
+   3. STRUCTURAL LAYOUT (SPA Shell)
+   ========================================================================== */
+.gemini-layout {
+    display: flex;
+    height: 100dvh; /* dvh accounts for mobile browser address bars */
+    width: 100%;
+}
+
+.main-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-width: 0; /* Prevents flex children from blowing out container width */
+}
+
+/* ==========================================================================
+   4. SIDEBAR & NAVIGATION (Desktop First)
    ========================================================================== */
 .sidebar {
     width: 280px;
@@ -51,7 +99,8 @@ body {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    transition: width 0.3s ease;
+    transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
 }
 
 .new-chat-btn {
@@ -85,6 +134,8 @@ body {
     color: var(--text-placeholder);
     margin-bottom: 1rem;
     padding-left: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .history-list {
@@ -111,30 +162,28 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .icon-btn:hover {
     background-color: var(--bg-surface-hover);
+    color: var(--text-primary);
 }
 
-/* ==========================================================================
-   Main Content Area
-   ========================================================================== */
-.main-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Top Navigation */
+/* Top Navigation Bar */
 .top-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
+    height: 64px;
+    flex-shrink: 0;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .brand-logo {
@@ -146,7 +195,7 @@ body {
 .user-avatar {
     width: 36px;
     height: 36px;
-    background-color: #3f51b5;
+    background-color: #3f51b5; /* Fallback color */
     color: white;
     border-radius: 50%;
     display: flex;
@@ -154,29 +203,33 @@ body {
     justify-content: center;
     font-weight: 600;
     font-size: 1rem;
+    flex-shrink: 0;
 }
 
 /* ==========================================================================
-   Chat Container & Views
+   5. CHAT CONTAINER & VIEWS
    ========================================================================== */
 .chat-container {
     flex: 1;
     overflow-y: auto;
     padding: 2rem 1.5rem;
     scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Landing View / Greeting */
+/* Greeting Screen (Landing) */
 .greeting-screen {
     max-width: 800px;
-    margin: 2rem auto;
+    width: 100%;
+    margin: 4vh auto auto auto; /* Pushes it down slightly, auto bottom pushes input down */
     display: flex;
     flex-direction: column;
     gap: 3rem;
 }
 
 .greeting-text {
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 5vw, 3.5rem); /* Fluid typography */
     font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.02em;
@@ -213,7 +266,7 @@ body {
     padding: 1rem;
     border-radius: 12px;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
+    transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -222,6 +275,8 @@ body {
 
 .suggestion-card:hover {
     background-color: var(--bg-surface-hover);
+    border-color: #555;
+    transform: translateY(-2px);
 }
 
 .suggestion-card p {
@@ -237,13 +292,13 @@ body {
     border-radius: 50%;
     font-size: 1.2rem;
     color: var(--text-secondary);
+    line-height: 1;
 }
 
-/* ==========================================================================
-   Message Stream
-   ========================================================================== */
+/* Message Stream */
 .message-stream {
     max-width: 800px;
+    width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -254,10 +309,11 @@ body {
 .message {
     display: flex;
     flex-direction: column;
-    max-width: 90%;
+    max-width: 85%;
     line-height: 1.6;
     font-size: 1rem;
     animation: fadeIn 0.3s ease;
+    word-wrap: break-word; /* Prevents long URLs from breaking layout */
 }
 
 @keyframes fadeIn {
@@ -278,16 +334,14 @@ body {
     align-self: flex-start;
     color: var(--text-primary);
     width: 100%;
+    max-width: 100%;
 }
 
-/* Markdown Styling inside Bot Messages */
-.bot-message p {
-    margin-bottom: 1rem;
-}
-
-.bot-message p:last-child {
-    margin-bottom: 0;
-}
+/* Markdown Formatting */
+.bot-message p { margin-bottom: 1rem; }
+.bot-message p:last-child { margin-bottom: 0; }
+.bot-message ul, .bot-message ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+.bot-message li { margin-bottom: 0.5rem; }
 
 .bot-message pre {
     background-color: #0d1117;
@@ -299,10 +353,10 @@ body {
 }
 
 .bot-message code {
-    font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    font-family: var(--font-code);
     font-size: 0.9em;
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 0.1rem 0.3rem;
+    padding: 0.2rem 0.4rem;
     border-radius: 4px;
 }
 
@@ -312,7 +366,7 @@ body {
 }
 
 /* ==========================================================================
-   Input Section
+   6. INPUT SECTION
    ========================================================================== */
 .input-section {
     padding: 1rem 2rem;
@@ -320,6 +374,7 @@ body {
     max-width: 900px;
     margin: 0 auto;
     width: 100%;
+    flex-shrink: 0;
 }
 
 .input-wrapper {
@@ -345,6 +400,7 @@ body {
     font-size: 1rem;
     outline: none;
     font-family: inherit;
+    min-width: 0; /* Prevents input from breaking flex layout */
 }
 
 .chat-input::placeholder {
@@ -355,6 +411,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .send-btn {
@@ -383,22 +440,88 @@ body {
 }
 
 /* ==========================================================================
-   Responsive Queries
+   7. MOBILE RESPONSIVENESS & OFF-CANVAS MENU
    ========================================================================== */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: var(--z-overlay);
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+}
+
 @media (max-width: 768px) {
+    /* Off-Canvas Sidebar */
     .sidebar {
-        display: none; /* Hide sidebar on mobile by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100dvh;
+        z-index: var(--z-sidebar);
+        transform: translateX(-100%);
+        box-shadow: 2px 0 8px rgba(0,0,0,0.5);
     }
 
-    .greeting-text {
-        font-size: 2.5rem;
+    .sidebar.active {
+        transform: translateX(0);
     }
 
-    .input-section {
-        padding: 1rem;
+    .sidebar-overlay {
+        display: block;
+        pointer-events: none;
+    }
+
+    .sidebar-overlay.active {
+        pointer-events: auto;
+        opacity: 1;
+    }
+
+    /* Top Nav Adjustments */
+    .mobile-menu-btn {
+        display: flex !important;
     }
     
+    .top-nav {
+        padding: 0.5rem 1rem;
+    }
+
+    /* Container Adjustments */
     .chat-container {
         padding: 1rem;
+    }
+
+    .greeting-screen {
+        margin-top: 2vh;
+        gap: 2rem;
+    }
+
+    .suggestions-grid {
+        grid-template-columns: 1fr 1fr; /* 2 columns on tablet/large mobile */
+    }
+
+    /* Message Adjustments */
+    .message {
+        max-width: 95%; /* Allow bubbles to take more space on small screens */
+    }
+
+    /* Input Area Adjustments */
+    .input-section {
+        padding: 0.75rem 1rem 1rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Tight Mobile Layout */
+    .suggestions-grid {
+        grid-template-columns: 1fr; /* Stack cards vertically on very small screens */
+    }
+    
+    .greeting-text {
+        font-size: 2rem; /* Hard fallback for clamp */
     }
 }

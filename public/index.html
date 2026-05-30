@@ -5,18 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus AI</title>
     
-    <!-- External Dependencies for Gemini-like UI -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- SPA Root Container -->
     <div id="app-root" class="gemini-layout">
         
-        <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <button id="newChatBtn" class="new-chat-btn">
                 <span class="material-symbols-outlined">add</span>
@@ -25,8 +22,7 @@
             <div class="recent-chats">
                 <p class="section-title">Recent</p>
                 <div id="historyContainer" class="history-list">
-                    <!-- History items injected via JS -->
-                </div>
+                    </div>
             </div>
             <div class="sidebar-footer">
                 <button class="icon-btn"><span class="material-symbols-outlined">help</span></button>
@@ -35,17 +31,21 @@
             </div>
         </aside>
 
-        <!-- Main Content Area -->
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
         <main class="main-view">
             <header class="top-nav">
-                <span class="brand-logo">Nexus</span>
+                <div class="nav-left">
+                    <button id="menuBtn" class="icon-btn mobile-menu-btn" style="display: none;">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                    <span class="brand-logo">Nexus</span>
+                </div>
                 <div class="user-avatar">A</div>
             </header>
 
-            <!-- Dynamic View Container (Landing OR Chat) -->
             <div id="chatContainer" class="chat-container">
                 
-                <!-- Default Landing State -->
                 <div id="landingView" class="greeting-screen">
                     <h1 class="greeting-text">
                         <span class="gradient-text">Hello, Akshay.</span><br>
@@ -72,13 +72,10 @@
                     </div>
                 </div>
 
-                <!-- Chat Message Stream (Hidden by default until query is sent) -->
                 <div id="messageStream" class="message-stream" style="display: none;">
-                    <!-- Messages injected via JS -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Fixed Input Area -->
             <div class="input-section">
                 <div class="input-wrapper">
                     <input id="mainInput" class="chat-input" type="text" placeholder="Enter a prompt here" autocomplete="off" />
@@ -94,9 +91,8 @@
         </main>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
