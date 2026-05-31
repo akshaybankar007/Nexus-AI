@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleSend(){
     const userInput = mainInput.value;
+
+    if (userInput.trim() !== ""){
     chatHistory.push(userInput);
-
     activateChat();
-
     const div = document.createElement('div');
     div.textContent = userInput;
     div.classList.add('message', 'user-message');
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     mainInput.value = '';   
  }
+}
     sendBtn.addEventListener('click', handleSend);
 
     mainInput.addEventListener('keydown', (event) =>{
