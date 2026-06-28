@@ -6,6 +6,7 @@ function App() {
   const [isChatActive, setIsChatActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [persona, setPersona] = useState('General');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSend = async () => {
     if (inputText.trim() === '') return;
@@ -20,7 +21,7 @@ function App() {
       const response = await fetch('http://localhost:3000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userPrompt, persona: persona }),
+        body: JSON.stringify({ message: userPrompt, persona }),
       });
       
       const data = await response.json();
@@ -44,41 +45,63 @@ function App() {
 
   return (
     <div className="gemini-layout">
-      <aside className="sidebar">
-        <button onClick={() => { setChatHistory([]); setIsChatActive(false); }} className="new-chat-btn">
+      {/* Mobile Overlay */}
+      <div 
+        className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} 
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
+      {/* Sidebar */}
+      <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
+        <div className="sidebar-top">
+          <button onClick={() => setIsSidebarOpen(false)} className="icon-btn mobile-close-btn">
+            <span className="material-symbols-outlined">menu</span>
+          </button>
+        </div>
+
+        <button onClick={() => { setChatHistory([]); setIsChatActive(false); setIsSidebarOpen(false); }} className="new-chat-btn rounded-pill">
           <span className="material-symbols-outlined">add</span>
           <span className="btn-text">New chat</span>
         </button>
-
-        <div className="persona-selector" style={{ marginTop: '2rem' }}>
-          <p className="section-title">AI Role</p>
-          <select 
-            value={persona} 
-            onChange={(e) => setPersona(e.target.value)}
-            style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', backgroundColor: '#131314', color: '#e3e3e3', border: '1px solid #333537', marginTop: '0.5rem', outline: 'none', cursor: 'pointer' }}
-          >
-            <option value="General">Nexus (Standard)</option>
-            <option value="Mentor">Code Mentor</option>
-            <option value="Interviewer">Mock Interviewer</option>
-          </select>
-        </div>
 
         <div className="recent-chats">
           <p className="section-title">Recent Prompts</p>
           <div className="history-list">
             {chatHistory.filter(m => m.sender === 'user').map((msg, i) => (
-              <div key={i} className="history-item" style={{padding: '0.5rem', fontSize: '0.85rem', color: '#c4c7c5', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                {msg.text}
+              <div key={i} className="history-item">
+                <span className="material-symbols-outlined chat-icon">chat_bubble</span>
+                <span className="history-text">{msg.text}</span>
               </div>
             ))}
           </div>
         </div>
+
+        <div className="sidebar-footer">
+          <button className="footer-btn rounded-pill">
+            <span className="material-symbols-outlined">help</span>
+            <span className="btn-text">Help</span>
+          </button>
+          <button className="footer-btn rounded-pill">
+            <span className="material-symbols-outlined">history</span>
+            <span className="btn-text">Activity</span>
+          </button>
+          <button className="footer-btn rounded-pill">
+            <span className="material-symbols-outlined">settings</span>
+            <span className="btn-text">Settings</span>
+          </button>
+        </div>
       </aside>
 
+      {/* Main Chat Area */}
       <main className="main-view">
         <header className="top-nav">
-          <span className="brand-logo">Nexus</span>
-          <div className="user-avatar">A</div>
+          <div className="nav-left">
+            <button className="icon-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+              <span className="material-symbols-outlined">menu</span>
+            </button>
+            <span className="brand-logo">Nexus</span>
+          </div>
+          <div className="user-avatar rounded-pill">A</div>
         </header>
 
         <div id="chatContainer" className="chat-container">
@@ -97,7 +120,7 @@ function App() {
                 </div>
               ))}
               {isLoading && (
-                <div className="message bot-message" style={{color: '#a8abae', fontStyle: 'italic'}}>
+                <div className="message bot-message loading-text">
                   Nexus is thinking...
                 </div>
               )}
@@ -105,8 +128,19 @@ function App() {
           )}
         </div>
 
+        {/* Input Section */}
         <div className="input-section">
-          <div className="input-wrapper">
+          <div className="input-wrapper rounded-pill">
+            <select 
+              className="role-selector rounded-pill"
+              value={persona} 
+              onChange={(e) => setPersona(e.target.value)}
+            >
+              <option value="General">General</option>
+              <option value="Mentor">Mentor</option>
+              <option value="Interviewer">Interviewer</option>
+            </select>
+            
             <input 
               className="chat-input"
               type="text" 
@@ -115,8 +149,9 @@ function App() {
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Enter a prompt here"
             />
+            
             <div className="input-actions">
-              <button onClick={handleSend} className="send-btn" disabled={isLoading}>
+              <button onClick={handleSend} className="send-btn rounded-pill" disabled={isLoading}>
                 <span className="material-symbols-outlined">send</span>
               </button>
             </div>
