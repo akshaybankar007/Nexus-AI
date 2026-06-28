@@ -5,6 +5,7 @@ function App() {
   const [chatHistory, setChatHistory] = useState([]);
   const [isChatActive, setIsChatActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [persona, setPersona] = useState('General');
 
   const handleSend = async () => {
     if (inputText.trim() === '') return;
@@ -16,11 +17,10 @@ function App() {
     setIsLoading(true);
 
     try {
-      // Fetching from your local Node server on Port 3000
       const response = await fetch('http://localhost:3000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userPrompt }),
+        body: JSON.stringify({ message: userPrompt, persona: persona }),
       });
       
       const data = await response.json();
@@ -49,6 +49,20 @@ function App() {
           <span className="material-symbols-outlined">add</span>
           <span className="btn-text">New chat</span>
         </button>
+
+        <div className="persona-selector" style={{ marginTop: '2rem' }}>
+          <p className="section-title">AI Role</p>
+          <select 
+            value={persona} 
+            onChange={(e) => setPersona(e.target.value)}
+            style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', backgroundColor: '#131314', color: '#e3e3e3', border: '1px solid #333537', marginTop: '0.5rem', outline: 'none', cursor: 'pointer' }}
+          >
+            <option value="General">Nexus (Standard)</option>
+            <option value="Mentor">Code Mentor</option>
+            <option value="Interviewer">Mock Interviewer</option>
+          </select>
+        </div>
+
         <div className="recent-chats">
           <p className="section-title">Recent Prompts</p>
           <div className="history-list">
