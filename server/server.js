@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((err) => console.error('MongoDB error:', err));
 
 app.post('/api/chat', async (req, res) => {
-    const { message } = req.body; // Removed 'persona'
+    const { message } = req.body;
     const API_KEY = process.env.GEMINI_API_KEY;
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
@@ -45,6 +45,27 @@ app.post('/api/chat', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Server failed to reach Gemini." });
+    }
+});
+
+
+// Temporary route to inject your data
+app.get('/api/seed', async (req, res) => {
+    try {
+        const exists = await User.findOne({ name: "Akshay Yogeshwar Bankar" });
+        if (exists) return res.json({ message: "Data already exists!" });
+
+        const myData = new User({
+            name: "Akshay Yogeshwar Bankar",
+            goals: ["Secure a Software Engineer role ASAP", "Master the MERN stack"],
+            skills: ["HTML", "CSS", "JavaScript", "Java (DSA)"],
+            personalNotes: "Currently located in Nagpur. Next technologies to learn: TypeScript and Tailwind CSS."
+        });
+
+        await myData.save();
+        res.json({ message: "Profile successfully created in MongoDB!" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
