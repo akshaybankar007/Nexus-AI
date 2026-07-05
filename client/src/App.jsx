@@ -5,7 +5,6 @@ function App() {
   const [chatHistory, setChatHistory] = useState([]);
   const [isChatActive, setIsChatActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [persona, setPersona] = useState('General');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSend = async () => {
@@ -21,7 +20,7 @@ function App() {
       const response = await fetch('http://localhost:3000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userPrompt, persona }),
+        body: JSON.stringify({ message: userPrompt }),
       });
       
       const data = await response.json();
@@ -131,16 +130,6 @@ function App() {
         {/* Input Section */}
         <div className="input-section">
           <div className="input-wrapper rounded-pill">
-            <select 
-              className="role-selector rounded-pill"
-              value={persona} 
-              onChange={(e) => setPersona(e.target.value)}
-            >
-              <option value="General">General</option>
-              <option value="Mentor">Mentor</option>
-              <option value="Interviewer">Interviewer</option>
-            </select>
-            
             <input 
               className="chat-input"
               type="text" 
